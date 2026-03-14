@@ -6,9 +6,11 @@ const addBtn = document.querySelector("#addBtn");
 const taskCount = document.querySelector("#taskCount");
 const filters = document.querySelector(".filters");
 const clearBtn = document.querySelector("#clearCompleted");
+const emptyState = document.querySelector("#emptyState");
+const themeToggle = document.querySelector("#themeToggle");
 
 addBtn.addEventListener("click", addTask);
-input.addEventListener("keypress", (e) => {
+input.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     addTask();
   }
@@ -17,6 +19,10 @@ const taskList = document.querySelector("#taskList");
 taskList.addEventListener("click", handleTaskClick);
 filters.addEventListener("click", handleFilterClick);
 clearBtn.addEventListener("click", clearCompleted);
+input.addEventListener("input", () => {
+  addBtn.disabled = input.value.trim() === "";
+});
+themeToggle.addEventListener("click", toggleTheme);
 
 function addTask() {
   const text = input.value.trim();
@@ -32,9 +38,12 @@ function addTask() {
   tasks.push(task);
 
   renderTasks(tasks);
+  updateEmptyState();
   updateTaskCount();
+  saveTasks();
 
   input.value = "";
+  addBtn.disabled = true;
 
   console.log("Task added great succes");
 }
@@ -47,10 +56,16 @@ function handleTaskClick(e) {
     const li = element.closest("li");
     const id = Number(li.dataset.id);
 
-    tasks = tasks.filter((task) => task.id !== id);
+    li.classList.add("removing");
 
-    renderTasks(tasks);
-    updateTaskCount();
+    setTimeout(() => {
+      tasks = tasks.filter((task) => task.id !== id);
+
+      renderTasks(tasks);
+      updateEmptyState();
+      updateTaskCount();
+      saveTasks();
+    }, 250);
   }
 
   // TOGGLE COMPLETED
@@ -67,7 +82,9 @@ function handleTaskClick(e) {
     });
 
     renderTasks(tasks);
+    updateEmptyState();
     updateTaskCount();
+    saveTasks();
   }
 }
 
@@ -98,11 +115,61 @@ function handleFilterClick(e) {
 }
 
 // Supprimer les tasks
-function clearCompleted(){
+function clearCompleted() {
+  const completed = document.querySelectorAll(".task-item.completed");
 
-  tasks = tasks.filter(task => !task.completed);
+  completed.forEach((task) => task.classList.add("removing"));
 
-  renderTasks(tasks);
-  updateTaskCount();
+  setTimeout(() => {
+    tasks = tasks.filter((task) => !task.completed);
+
+    renderTasks(tasks);
+    updateEmptyState();
+    updateTaskCount();
+    saveTasks();
+  }, 250);
+}
+
+function loadTasks() {
+  const storedTasks = localStorage.getItem("tasks");
+
+  if (storedTasks) {
+    tasks = JSON.parse(storedTasks);
+
+    renderTasks(tasks);
+    updateTaskCount();
+    updateEmptyState();
+  }
+}
+
+function updateEmptyState() {
+  if (tasks.length === 0) {
+    emptyState.style.display = "block";
+  } else {
+    emptyState.style.display = "none";
+  }
+}
+
+input.focus();
+
+function toggleTheme() {
+  document.body.classList.toggle("dark");
+  const isDark = document.body.classList.contains("dark");
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+}
+
+// Charger la tâche
+loadTasks();
+
+// Charger le theme Dark ou Light
+loadTheme();
+
+function loadTheme(){
+
+    const savedTheme = localStorage.getItem("theme");
+
+    if(savedTheme === "dark"){
+        document.body.classList.add("dark");
+    }
 
 }

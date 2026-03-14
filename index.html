@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>ToDo App - JS Project</title>
     <link rel="stylesheet" href="./css/style.css">
 </head>
 
@@ -12,6 +12,10 @@
     <div class="app">
 
         <h1 class="title">Todo App</h1>
+
+        <button id="themeToggle" class="theme-toggle">
+            🌙
+        </button>
 
         <div class="input-container">
             <input id="taskInput" class="task-input" type="text" placeholder="Add a new task...">
@@ -22,6 +26,10 @@
         </div>
 
         <ul id="taskList" class="task-list"></ul>
+
+        <p id="emptyState" class="empty-state">
+            No tasks yet — add your first task 🚀
+        </p>
 
         <div class="footer">
 

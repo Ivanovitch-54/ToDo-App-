@@ -14,7 +14,7 @@ function renderTasks(tasks) {
 
   filteredTasks.forEach((task) => {
     const li = document.createElement("li");
-    li.classList.add("task");
+    li.classList.add("task-item", "task-enter");
 
     if (task.completed) {
       li.classList.add("completed");
@@ -22,14 +22,17 @@ function renderTasks(tasks) {
     li.dataset.id = task.id;
 
     li.innerHTML = `
-            <input type="checkbox" ${task.completed ? "checked" : ""}>
+    <label class="task-checkbox">
+        <input type="checkbox" ${task.completed ? "checked" : ""}>
+        <span class="checkmark"></span>
+    </label>
 
-            <span class="task-text">
-                ${task.text}
-            </span>
+    <span class="task-text">
+        ${task.text}
+    </span>
 
-            <button class="delete-btn">✕</button>
-        `;
+    <button class="delete-btn">✕</button>
+`;
 
     list.appendChild(li);
   });
