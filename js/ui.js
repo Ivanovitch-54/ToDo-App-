@@ -1,13 +1,9 @@
-function renderTasks(tasks) {
-  const list = document.querySelector("#taskList");
-  // Filtre les tâches
-  let filteredTasks = tasks;
+import { filterTasks } from "./filter.js";
 
-  if (currentFilter === "active") {
-    filteredTasks = tasks.filter((task) => !task.completed);
-  } else if (currentFilter === "completed") {
-    filteredTasks = tasks.filter((task) => task.completed);
-  }
+export function renderTasks(tasks, currentFilter) {
+  const list = document.querySelector("#taskList");
+
+  let filteredTasks = filterTasks(tasks, currentFilter);
 
   // Vide la liste avant de start //
   list.innerHTML = "";
@@ -15,6 +11,7 @@ function renderTasks(tasks) {
   filteredTasks.forEach((task) => {
     const li = document.createElement("li");
     li.classList.add("task-item", "task-enter");
+    li.setAttribute("draggable", true);
 
     if (task.completed) {
       li.classList.add("completed");
